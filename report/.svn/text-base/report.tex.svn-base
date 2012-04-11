@@ -1,0 +1,86 @@
+
+\documentclass[12pt,a4paper,oneside,titlepage]{article}
+\usepackage[pdftex]{graphicx}
+%\usepackage[T1]{fontenc} 
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage{listings}
+\usepackage{subfig}
+\usepackage{float}
+\lstset{
+  language=java,
+  showspaces=false, %Leaves spaces blank
+  showstringspaces=false, %Leaves spaces in strings blank
+  breaklines=true, %Break lines that are too long
+  basicstyle=\footnotesize, %The text style and size of the code
+  commentstyle=\footnotesize\it, %The text style and size of the code
+  extendedchars=true, %Includes danish characters
+  numbers = left, %Shows linenumbers
+  stepnumber = 1, %The interval with which linenumbers are displayed
+  numberstyle=\footnotesize, %The label size
+  tabsize = 3, %Breden af tab, default = 8
+  linewidth = \textwidth %Liniebreden
+}
+
+\floatstyle{ruled}
+\newfloat{program}{thp}{lop}
+\floatname{program}{Program}
+
+\usepackage[usenames,dvipsnames]{color} % predefined color: http://www.sci.usq.edu.au/staff/robertsa/LaTeX/ltxusecol.html
+%\usepackage{cite}
+%
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\begin{large}
+\textbf{\textit{Technical University of Denmark}}\\
+\vspace{0.2cm}
+\textit{Department of Informatics and Mathematical Modelling}
+\end{large}
+\vspace{1.5cm}
+\hrule height 1.5pt
+\vspace{1.0cm}
+\begin{large}
+02825 Introduction to Computer Game Prototyping
+\end{large}
+\\
+\vspace{0.2cm}
+Fall term 2009\\
+\vspace{1.0cm}
+\hrule height 1.5pt
+\vspace{1.5cm}
+\begin{Huge}
+In the name of Science\\
+\end{Huge}
+\vspace{7cm}
+\begin{normalsize}
+$\overline{\text{David Emil Lemvigh s042899}}\hspace*{3cm}\overline{\text{Andreas Møller s042809}}$\\
+
+\vspace{2cm}
+December 15, 2009
+\end{normalsize}
+\end{center}
+\end{titlepage}
+
+\newcommand{\TODO}[1]{\textbf{\textcolor{red}{#1}}}
+\newcommand{\uppaal}{\textsc{Uppaal}}
+\newcommand{\lejos}{LeJOS}
+\newcommand{\rcx}{\textsc{RCX}}
+\newcommand{\verify}[1]{\begin{center}{\texttt{#1}}\end{center}}
+\newcommand{\source}[1]{\subsection{#1}\lstinputlisting{src/uppaal/#1}}
+\newcommand{\sem}[1]{\lceil #1 \rceil}
+\newcommand{\semchop}[1]{\lceil #1 \rceil^\smallfrown}
+
+\tableofcontents
+
+\input{intro}
+\include{Game}
+\include{Implementation}
+\include{Analysis}
+\include{Conclusion}
+\appendix
+\include{Source}
+\end{document}

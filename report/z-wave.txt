@@ -1,0 +1,67 @@
+Z-wave
+
+The z-wave is a wireless mesh networking technology intended for home automation. The technology uses RF radios that operates in the sub Gigahertz frequency and is optimized for low bandwidth data transfers, such as simple on/ off commands, or sensor status messages.
+
+because z-wave operates outside the standard 2.4 GHz frequency it suffers very little interference from other household electronics. This gives z-wave improved reliability alongside other wireless technologies like WI-FI and other IEEE 802.11-based wireless systems.   
+
+Z-wave modules has a very low power consumption, and a low cost of manufacture makes the technology easily embedded in consumer electronics, and is very well suited for battery powered devices.
+
+protocol
+
+z-wave is a closed standard, which is the reason parts of this report is confidential. 
+
+
+The z-wave protocol is designed for reliable wireless communication in low cost control networks.
+
+The z-wave protocol in essence has two basic kinds of devices; Controllers, and slaves.
+
+ Controlling devices which are devices capable of initiating communication, and issue commands.  In a z-wave network there is one primary controller, and any number of secondary controllers. 
+
+The primary controller is the only device capable of adding or removing devices from the network. The primary controller has a "home ID" that is preprogrammed from the manufacturer  . The home ID is a 32 bit unique identifier, that is broadcasted to all devices in the network, and used in the header of all messages sent inside the network. When including new devices in the network the primary controller sends the home ID, and assigns the device an 8 bit device id.
+
+Secondary controllers are limited, so they cannot assign or reset device ID's (add or remove devices)
+
+Slave nodes execute the commands and replies to issued commands. Slave nodes are also capable of   forwarding messages, which makes is possible for a controlling device to reach slave nodes out of the controllers immediate reach.
+
+The BIIIB home automation system uses four different types of  z-wave devices:
+
+The portable controller is the networks primary controller. This is only used when configuring the network, and is not needed for the operation of the system. The controller is portable, because z-wave does not allow the assignment, or reset of device ID's via a routed message, and the controller must therefore be brought within range of the device that is to be included or excluded from the network. Since the controller is portable, other nodes cannot hold routing information to the device, and is therefore not capable of initializing communication with the controller.
+
+The BIIIB main computer will act as a Static Update Controller or SUC. The static update controller has all the capabilities of a normal secondary controller. Because it is a static controller routing slaves can submit unsolicited status messages to it. An other feature of the SUC is that it receives updates from the primary controller about all changes made to the network topology. The SUC also has the ability to send topology updates to routing slaves. 
+
+Slaves are z-wave devices that receives commands, and executes actions based on the received  command. A slave is unable to send messages to other devices, unless told to do so in a received command. In BIIIB all appliance modules and light dimmers act as slaves.
+
+Routing slaves are slaves that can hold routing information on up to five other devices, and has the added capability of sending unsolicited status messages to these devices. In the BIIIB all sensors and switches are routing slaves, which contains the route to the SUC. Switches will in addition to the SUC also hold the routes to the devices they control. 
+
+
+The communication protocol 
+
+The protocol consists of four layers, the MAC layer that controls the RF media, Transfer Layer that controls the transmission of frames, the Routing Layer which is in charge of the routing, and the application layer, that controls the payload in the transmitted frames.
+
+
+I will not be explaining the entirety of these four layers, but only highlight some of the features which will be referred to in the security analysis.
+
+
+MAC Layer
+The Media Access Control layer controls the radio frequency medium. The interesting feature in regards to security, is the Collision avoidance feature implemented in this layer. When sending data, the MAC layer adds  "start of frame" and "end of  frame " symbols to the datastream. The system avoid collisions by having a node delay transmission if it has received a SOF symbol from and other node, without a matching EOF symbol.
+
+
+Transfer layer 
+The transfer layer layer handles data transmission between two nodes. It has three different frame formats.
+
+The singlecast frame is used when sending messages to a single specific receiver. Once a node recives a singlecast frame it returns an acknowledge frame, to let the sender know the message was received. The acknowledge frame makes this type of message the choice for reliable messaging.
+
+The multicast frame sends a message to a specific list of nodes. Multicast frames does not receive acknowledge messages.
+
+The broadcast frame sends a signal to all nodes in the network. Like the multicast frame the broadcast frame is not acknowledged by any nodes.
+
+
+Application layer
+
+The z-wave application layer is responsible for decoding and execution commands in the network. In this layer we will focus on the assignment of id's 
+All controllers are created with a unique home ID. The z-wave network has the home ID of the primary controller, and all other controllers will adopt the ID of that controller.
+
+In order to assign an id to a node,  both the controller and the receiving node needs to be in a special learn state. When  the node enters this state it sends out a node information frame, which holds information about the device. In order for a node to accept an id, its must have id = 0, meaning it must not be included in an other network. Otherwise the node must first be excluded from the other network. 
+One issue with this system, is that a node cannot be excluded from the network, with out a direct action from that node. If a node dies it can therefore not be excluded from the system.
+
+

@@ -1,0 +1,10 @@
+BIIIB
+Building Intelligence Into Intelligent Buildings or BIIIB is a smarthouse project being developed at institute for Informatics and Mathematical Modeling at the Technical Univeristy of Denmark. The basic concept is to use artificial intelligence and machine learning to operate a smarthouse, based on input from a network of sensors monitoring the house. BIIIB consists of three parts;
+An appliance network, which includes a number of appliances and connected wall switches. This network controls all the houses normal features, and is set up to function just like a house normally would, with switches and remotes, for turning on and off the various appliances and gadgets in the house.
+
+A sensor network, which contains all sorts of sensors ranging from infrared movement sensor to thermometers and lux sensors. 
+
+A central computer which is connected to both the sensornetwork and the appliance network. 
+
+The system works by monitoring the appliance network and sensornetwork. When ever an action occurs in the appliance network, the system creates a relation between that action, and any sensors, that have been triggered with in the last few seconds. The more times a sensor is related to an action, the stronger the bond between the two become, until the system becomes confident enough to trigger the action autonomously, based only on the observed sensorevent. 
+This way the BIIIB system is trained by the users, to control the house in excactly the way they want it to. 

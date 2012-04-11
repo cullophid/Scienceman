@@ -1,0 +1,35 @@
+Security analysis
+
+In this section i will first address the security issues in the third generation of the z-wave protocol, as this is the version currently in use in the vast majority of z-wave devices. I will then describe and analyze the new security features in the fourth generation of the protocol, and finally address which additional issues exists in the BIIIB system.
+
+
+Z-WAVE V3.
+Up until and including the third generation of the z-wave chip, security have not been seen as an important issue, and have therefore not been addressed in the protocol. There is therefore no existing method of encrypting the communication in a z-wave network. 
+If an attacker were to target a z-wave based system, he would only have to eavesdrop on the system to gain all the necessary id's he needs to control the system. This can effectively be done by the z-wave zniffer tool, which is included in the z-wave developer kit v3.0.x. Once the necessary id's are obtained the attacker will have almost full control over the system. He will be able to send any type of command by spoofing the id's of the various devices, and even add and remove devices from the network by spoofing the primary controller. Adding or removing a device will however not affect the original primary controller, which will still contain the original nodes, and routing tables, but any secondary controller will be affected.
+
+Attacking a network without traffic
+Since the home ID is 32bit, it is possible to brute force the home ID. This would be done by broadcasting network update frames, used to update the topology of the network, since this type of frame does not require any node id's, and still generate traceable network traffic.  The problem with this approach however is that the attacker would have to try the 4.4 billion possibilities of the 32 bit key, which even while pushing the limit of the bandwidth would take well over a month. 
+
+The Schlage Z-wave
+The american company Schlage has released a z-wave enabled door lock which gives the user the ability enable or disable the lock wirelessly.  Schalge uses a 128 bit AES encryption when sending data over the z-wave protocol, in order to secure the integrity of the lock. This key is set from the manufacturers side, so at no point is the key transmitted over the z-wave connection. Furthermore the ability to lock and unlock your door is not available to other zwave modules, but is only used with a webservice, and mobile service provided by schlage. Schlage has managed to obtain a decent amount of security, by circumventing the security problems in the z-wave protocol. The encrypted data packages are very small, so any possible attackers will have very little data to work with.
+
+
+Z-WAVE  V4.
+The fouth generation of the z-wave chip is faily new, and there are  no products on the market that uses v4 z-wave chips yet. 
+In the v4 protocol zensys have embedded a security package, which allows the use of 128 bit AES encryption. There is currently not allot of information available on how the encryption is implemented,   Because of This , I will not try to analyze the actual encryption protocol in z-wave v4.  how ever one of the employees in zensys told me that the AES keys will be distributed over the z-wave connection when including new devices. The sending of unencrypted keys is of cause  a serious security risk, if an attacker is eavesdropping on the key exchange. 
+
+In most systems new devices are not added that frequently, and an attacker would therefore have to wait along time in order to snatch a key. There are however ways to try and force the owner of a z-wave network to add a device. 
+
+The simples way of doing this, is to provide the user with a new device to include in his network. Handing out free z-wave keychains, might be enough to do the trick. 
+
+If it is not possible to make the target add new devices to his network, an attacker might try to convince the target, that one of his devices is not working properly.  
+In section TODO we discussed the collision avoidance feature in the MAC layer. This feature can be abused by an attacker to flood the frequency with long messages, and thereby create a denial of service attack on the z-wave network. if this is done consistently when one specific devices should activate. e.g. a garage door opener, the target will be compelled to think that the device might not be working properly. Based on my own experience with z-wave controllers, re-including a device in a network is often an easy way of fixing many common problems.
+
+The above method could be very effective, but also requires allot of  work from the attacker. In addition i think it lacks some of the flair of this last approach, which i call the sledge hammer trick. In order to exclude a device from a network, you need an info frame from the device, during the exclusion phase. If the device is broken, it can there fore not be excluded from the network. All other devices will still think that the device exists in the network, and it will very likely become enough of a annoyance for the target, to make him reconfigure the entire network. 
+
+Once the encryption key has been obtained , through one of the preceding methods. the attacker will have the same possibilities as in version 3 of the z-wave protocol.
+
+
+
+Security and BIIIB.
+All the security issues that exists in the z-wave protocol will of cause affect the BIIIB system. There are however one additional problem, when BIIIB is introduced. Since the attacker is capable of spoofing any node in the system, he will therefore also be able to train the system, into doing what he want. This could potentially be very dangerous, since the result of the attack in many cases only will show long after the actual attack is over. This way it will be very difficult to discover an attack before the damage is done, and the attacker is long gone.

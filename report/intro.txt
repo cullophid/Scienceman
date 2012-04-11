@@ -1,0 +1,2 @@
+intro
+"In the name of science " is a 2d platform action game. The game is centered around the implementation of the chipmunk 2d physics engine. This provides a simulation based gameplay that is both fun and versatile, as the player uses the environment to defeat his enemies instead of  the traditional handgun / assaultrifle/ RPG-lazerplasmablaster. In this report we discuss the concept and vision of the game, along with the implementation of a proof-of-concept prototype, and an analysis of the functionality and playability of the game.

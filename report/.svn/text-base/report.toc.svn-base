@@ -1,0 +1,19 @@
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}In the name of science}{2}
+\contentsline {subsection}{\numberline {2.1}Game rules}{2}
+\contentsline {subsection}{\numberline {2.2}Desired features}{3}
+\contentsline {paragraph}{Puzzles}{3}
+\contentsline {paragraph}{Bossevents}{3}
+\contentsline {paragraph}{HUD}{3}
+\contentsline {section}{\numberline {3}Implementation}{4}
+\contentsline {subsection}{\numberline {3.1}Project Structure}{4}
+\contentsline {subsection}{\numberline {3.2}Graphics}{4}
+\contentsline {subsection}{\numberline {3.3}Physics}{4}
+\contentsline {subsubsection}{\numberline {3.3.1}Game world}{4}
+\contentsline {subsubsection}{\numberline {3.3.2}Player movement}{4}
+\contentsline {subsubsection}{\numberline {3.3.3}Player abilities}{5}
+\contentsline {section}{\numberline {4}Analysis}{7}
+\contentsline {subsection}{\numberline {4.1}Playability}{7}
+\contentsline {subsection}{\numberline {4.2}Feedback}{7}
+\contentsline {subsection}{\numberline {4.3}Reflection}{8}
+\contentsline {section}{\numberline {5}Conclusion}{9}

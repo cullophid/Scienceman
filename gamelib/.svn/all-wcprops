@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/31/trunk/gamelib
+END
+sprites.py
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/23/trunk/gamelib/sprites.py
+END
+data.py
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/31/trunk/gamelib/data.py
+END
+game.py
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/23/trunk/gamelib/game.py
+END
+cutscenes.py
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/2/trunk/gamelib/cutscenes.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/2/trunk/gamelib/__init__.py
+END
+ezmenu.py
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/31/trunk/gamelib/ezmenu.py
+END
+menu.py
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/2/trunk/gamelib/menu.py
+END
+main.py
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/31/trunk/gamelib/main.py
+END
+level.py
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/19/trunk/gamelib/level.py
+END

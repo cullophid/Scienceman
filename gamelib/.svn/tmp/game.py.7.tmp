@@ -1,0 +1,278 @@
+#! /usr/bin/env python
+
+import sys, os
+import random
+
+import pygame
+from pygame.locals import *
+from pygame.color import *
+import pymunk
+
+from cutscenes import *
+from data import *
+from sprites import *
+from level import *
+
+global globalPlayer
+
+def collision(shapeA, shapeB, contacts, normal_coef, screen):
+	global globalPlayer
+	if shapeA == globalPlayer.shape or shapeB == globalPlayer.shape:
+		globalPlayer.landed()
+	return True
+
+def to_pygame(p):
+	return (p.x,480-p.y)
+	
+def RelRect(actor, camera):
+	return Rect(actor.rect.x-camera.rect.x, actor.rect.y-camera.rect.y, actor.rect.w, actor.rect.h)
+
+class Camera(object):
+	def __init__(self, player, width):
+		self.player = player
+		self.rect = pygame.display.get_surface().get_rect()
+		self.world = Rect(0, 0, width, 480)
+		self.rect.center = self.player.rect.center
+	def update(self):
+		if self.player.rect.centerx > self.rect.centerx+64:
+			self.rect.centerx = self.player.rect.centerx-64
+		if self.player.rect.centerx < self.rect.centerx-64:
+			self.rect.centerx = self.player.rect.centerx+64
+		if self.player.rect.centery > self.rect.centery+64:
+			self.rect.centery = self.player.rect.centery-64
+		if self.player.rect.centery < self.rect.centery-64:
+			self.rect.centery = self.player.rect.centery+64
+		self.rect.clamp_ip(self.world)
+				
+	def draw_platforms(self, surf, platforms):
+		for p in platforms:
+			p.rect.center = to_pygame(p.shape.body.position)
+			if p.rect.colliderect(self.rect):
+				surf.blit(p.image, RelRect(p, self))
+				
+	def draw_crates(self, surf, crates):
+		for c in crates:
+			c.rect.center = to_pygame(c.shape.body.position)
+			if c.rect.colliderect(self.rect):
+				image = pygame.transform.rotate(c.image,c.body.angle*180/math.pi)
+				surf.blit(image, RelRect(c, self))
+				
+	def draw_player(self, surf, players):
+		for p in players:
+			p.rect.center = to_pygame(p.shape.body.position)
+			if p.rect.colliderect(self.rect):
+				surf.blit(p.image, RelRect(p, self))
+				
+	def draw_test_force(self, surf, pos):
+		global globalPlayer
+		#pygame.draw.line(surf, THECOLORS["black"], to_pygame(globalPlayer.shape.body.position), pos, 5)
+
+def save_level(lvl):
+	open(filepath("prog.sav"), "w").write(str(lvl))
+
+def get_saved_level():
+	try:
+		return int(open(filepath("prog.sav")).read())
+	except:
+		open(filepath("prog.sav"),	"w").write(str(1))
+		return 1
+
+class Game(object):
+	
+	def __init__(self, screen, continuing=False):
+		global globalPlayer
+		#set screen
+		self.screen = screen
+		#init pymunk
+		pymunk.init_pymunk()
+		self.space = pymunk.Space()
+		self.space.gravity = (0.0, -900.0)
+		self.space.set_default_collisionpair_func(collision)
+		self.sprites = pygame.sprite.OrderedUpdates()
+		self.players = pygame.sprite.OrderedUpdates()
+		self.platforms = pygame.sprite.OrderedUpdates()
+		self.nomoveplatforms = pygame.sprite.OrderedUpdates()
+		self.crates = pygame.sprite.OrderedUpdates()
+		
+		#set images
+		Player.right_images = [load_image("hero1.png"),load_image("hero2.png"),load_image("hero3.png"),load_image("hero4.png"),load_image("hero5.png") ]
+		Platform.images = {"platform-top.png": load_image("platform-top.png"), "platform-middle.png": load_image("platform-middle.png")}
+		
+		#set groups
+		Player.groups = self.sprites, self.players
+		Platform.groups = self.sprites, self.platforms, self.nomoveplatforms
+		Crate.groups = self.sprites, self.crates
+
+		self.lvl = 1
+		if continuing:
+			self.lvl = get_saved_level()
+		self.player = Player((20, 200))
+		globalPlayer = self.player
+		self.clock = pygame.time.Clock()
+		self.bg = load_image("bg.png")
+		self.level = Level(self.lvl)
+		print "ADDING STUFF"
+		self.space.add(self.player.body, self.player.shape)
+		for platform in self.platforms:
+			self.space.add_static(platform.shape)
+		for crate in self.crates:
+			self.space.add(crate.body,crate.shape)
+<<<<<<< .mine
+			print crate.body.position
+		for badguy in self.badguys:
+			self.space.add(badguy.body,badguy.shape) 
+=======
+>>>>>>> .r14
+			
+		self.camera = Camera(self.player, self.level.get_size()[0])
+		self.font = pygame.font.Font(filepath("font.ttf"), 16)
+		self.heroimg = load_image("hero1.png")
+		self.running = 1
+		#self.music = "gameloop.ogg"
+		
+		
+		#self.intro_level()
+		self.main_loop()
+		
+	def end(self):
+		self.running = 0
+		
+	def intro_level(self):
+		#currently deactivicated
+		stop_music()
+		self.screen.fill((0, 0, 0))
+		self.draw_stats()
+		ren = self.font.render("Level %d" % self.lvl, 1, (255, 255, 255))
+		self.screen.blit(ren, (320-ren.get_width()/2, 230))
+		ren = self.font.render("Lives x%d" % self.lives, 1, (255, 255, 255))
+		self.screen.blit(ren, (320-ren.get_width()/2, 255))
+		pygame.display.flip()
+		pygame.time.wait(2500)
+		#play_music(self.music)
+		
+	def next_level(self):
+		stop_music()
+		try:
+			self.lvl += 1
+			if self.lvl == 10:
+				self.music = "boss.ogg"
+			self.clear_sprites()
+			self.level = Level(self.lvl)
+			self.player = Player((0, 0))
+			self.camera = Camera(self.player, self.level.get_size()[0])
+			save_level(self.lvl)
+			self.intro_level()
+		except:
+			if self.lives == 0: #HACK MUST FIX LOL
+				self.lives += 1
+			self.end()
+				
+	def redo_level(self):
+		if self.running:
+			print "REDO"
+			self.clear_sprites()
+			self.space.remove(self.sprites)
+			self.level = Level(self.lvl)
+			self.player = Player((0, 0))
+			self.camera = Camera(self.player, self.level.get_size()[0])
+			#play_music("gameloop.ogg")
+		
+	def show_death(self):
+		ren = self.font.render("YOU HAVE BEEN DEADIFIED!", 1, (255, 255, 255))
+		self.screen.blit(ren, (320-ren.get_width()/2, 235))
+		pygame.display.flip()
+		pygame.time.wait(2500)
+		
+	def gameover_screen(self):
+		stop_music()
+		play_music("gameover.ogg")
+		cutscene(self.screen, ["This is what you call", "GAME OVERFICATION!"])
+		self.end()		
+	def clear_sprites(self):
+		for s in self.sprites:
+			pygame.sprite.Sprite.kill(s)
+
+	def main_loop(self):
+
+		while self.running:
+			
+			if not self.running:
+				return
+			
+
+			self.clock.tick(60)
+			self.camera.update()
+			for s in self.sprites:
+				s.update()
+				
+			#set collision groups
+			self.player.collide(self.platforms)
+			
+			for e in pygame.event.get():
+				if e.type == QUIT:
+					sys.exit()
+				if e.type == KEYDOWN:
+					if e.key == K_ESCAPE:
+						self.end()
+					if e.key == K_UP or e.key == K_w:
+						self.player.jump()
+					#add mouse buttons and physics powers here
+					if e.key == K_x:
+						#self.ball = Ball(self.space)
+						pass
+				if e.type == MOUSEBUTTONDOWN:
+					pos = (e.pos[0] + self.camera.rect.x, 480 - e.pos[1])
+					print "mouse pressed", e.button
+					if e.button == 1:
+						self.player.push(self.space, pos)
+					elif e.button == 3:
+						self.player.pull(self.space, pos)
+				if e.type == KEYUP:
+					self.player.gravityWellEnd(self.space)
+			
+			if pygame.key.get_pressed()[K_LSHIFT]:
+				p = pygame.mouse.get_pos()
+				pos = pymunk.Vec2d(p[0] + self.camera.rect.x, 480 - p[1])
+				self.player.gravityWell(self.space, pos)
+			
+			self.space.step(1/100.0)
+			if not self.running:
+				return
+			self.screen.blit(self.bg, ((-self.camera.rect.x/2)%640, 0))
+			self.screen.blit(self.bg, ((-self.camera.rect.x/2)%640 + 640, 0))
+			self.screen.blit(self.bg, ((-self.camera.rect.x/2)%640 - 640, 0))
+			self.camera.draw_platforms(self.screen, self.platforms)
+			self.camera.draw_crates(self.screen, self.crates)
+<<<<<<< .mine
+			self.camera.draw_badguys(self.screen,self.badguys)
+=======
+>>>>>>> .r14
+			self.camera.draw_player(self.screen, self.players)
+			self.camera.draw_test_force(self.screen, pygame.mouse.get_pos())
+<<<<<<< .mine
+=======
+			#self.draw_stats()
+>>>>>>> .r14
+
+
+			if not self.player.alive():
+				self.show_death()
+				self.redo_level()
+			pygame.display.flip()
+			if not self.running:
+				return
+
+	def draw_stats(self):
+		#currently deactivicated
+		for i in range(5):
+			self.screen.blit(self.heart2, (16 + i*34, 16))
+		for i in range(self.player.hp):
+			self.screen.blit(self.heart1, (16 + i*34, 16))
+		self.screen.blit(self.heroimg, (288, 16))
+		lives = self.lives
+		if lives < 0:
+			lives = 0
+		ren = self.font.render("%09d" % self.score, 1, (255, 255, 255))
+		self.screen.blit(ren, (624-ren.get_width(), 16))
+		ren = self.font.render("x%d" % lives, 1, (255, 255, 255))
+		self.screen.blit(ren, (288+34, 24))

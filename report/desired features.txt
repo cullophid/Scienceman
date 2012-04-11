@@ -1,0 +1,13 @@
+desired features
+
+ The game centers around the use of the 2d physics engine, and the ability to use the various objects in a level as weapons. The main features of  the game is therefore the abilities, granted by the powergloves, to manipulate objects.  These abilities must function smoothly, as they are the foundation of almost all aspects of the game.
+
+Puzzles
+Besides the combat , the game should include a number of different puzzles that requires the abilities of the powergloves to solve. These can range from obstacles that need to be moved, to ledges that can only be reached by piling crates, or hidden doors that are opened by the PULL! power.
+
+bossevents
+At the end of each level should be a boss event. This can either be a specifik kind of enemy, with a large amount of hitpoints, and special weaponry, or a large scale puzzle, that requires the use of all the heroes abilities to complete.
+
+ 
+HUD
+The game should have a heads up display, that shows the players hitpoints, game score, and boss hit points during a boss fight.

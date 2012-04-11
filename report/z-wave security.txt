@@ -1,0 +1,64 @@
+
+brain storm
+z-wave
+	home id : 32bit hardcoded in controller device
+	node id : 8 bit, assigned by controller 
+	z-wave standard
+	protocol
+
+	devices
+		which devices exists
+
+Need for security in BIIIB
+	why do we need security in BIIIB
+	what kind of damage can be done through BIIIB
+	
+	confidentiality, integrity, authenticity.
+	
+
+issues. MAC layer collision avoidance
+broken modules cannot be removed from the network
+
+Attacks:
+	MAC layer collision avoidance DOS attack.
+	node spoofing
+
+solutions
+	diffie-hellmannn/ public key
+	
+
+z-wave security
+
+	before v4
+
+
+	after v4
+		z-weave ecnryption
+
+
+
+
+
+
+
+report structure
+
+intro
+	more access control than data security
+BIIIB
+	what is biiib?
+	Z-WAVE
+		z.wave protocol
+	
+Security analysis.
+
+	z-wave
+		issues
+		attacks
+		possible solutions
+
+	BIIIB	
+		additional possibilities with the biiib system	
+
+
+conclusion
